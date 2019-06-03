@@ -26,6 +26,8 @@ const usersController = require('./controllers/users');
 app.use('/users', usersController);
 const conversationsController = require('./controllers/conversations');
 app.use('/convos', conversationsController);
+const messagesController = require('./controllers/messages');
+app.use('/messages', messagesController);
 
 app.listen(PORT, () => {
 	console.log('listening on port:', PORT);

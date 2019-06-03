@@ -14,10 +14,16 @@ DELETE (/current) -- delete specific user and associated convos<br/>
 ##Conversation:
 
 GET (/convo/:id) -- show conversation<br/>
-GET (/current/:id/convos) -- list of users conversations<br/>
-GET(/current/:id/convos/:username) -- search for a conversation by username<br/>
-POST (/convo) -- start a conversation<br/>
+GET (/) -- list of users conversations<br/>
+GET(/search/:username) -- search for a conversation by username<br/>
+POST (/:user) -- start a conversation<br/>
 DELETE (/convo/:id) -- delete a conversation<br/>
+
+##Message:
+
+POST (/:convo) -- create a message in a conversation<br/>
+DELETE (/message/:id) -- delete a message<br/>
+
 
 #Models
 
@@ -28,6 +34,7 @@ username, password, language, received_lang, sent_lang, location, about, first_n
 ##Conversation:
 
 updated, messages(text, status)
+
 
 #Third party API
 
