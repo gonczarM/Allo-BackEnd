@@ -6,12 +6,18 @@ const superagent = require('superagent')
 const LanguageTranslatorV3 = require('ibm-watson/language-translator/v3');
 const languageTranslator = new LanguageTranslatorV3({ version: '2019-06-03' });
 
+// translate route to third party api
 router.get('/', async (req, res, next) => {
 	try{
-		const body = await languageTranslator.listIdentifiableLanguages();
+		const translateParams = {
+  		text: 'hi, how are you?',
+  		model_id: 'en-pt',
+		};
+		const translationResult = await languageTranslator.translate(translateParams);
+		console.log(translationResult.translations);
 		res.status(200).json({
 			status: 200,
-			body: body
+			text: translationResult.translations
 		})
 	}
 	catch(error){
