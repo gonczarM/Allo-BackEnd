@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Conversation = require('./conversation');
-const Message = require('./message');
 
 const userSchema = new mongoose.Schema({
 	username: {
@@ -28,10 +27,6 @@ const userSchema = new mongoose.Schema({
 	conversations:[{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Conversation'
-	}],
-	messages:[{
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'Message'
 	}]
 });
 
