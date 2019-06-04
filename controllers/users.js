@@ -52,10 +52,18 @@ router.get('/current', async (req, res, next) => {
 router.get('/search/:username', async (req, res, next) => {
 	try{
 		const searchedUser = await User.findOne({'username': req.params.username})
-		res.json({
-			status: 200,
-			user: searchedUser
-		})
+		if(!searchedUser){
+			res.json({
+				status: 401,
+				message: 'user does not exist'
+			})
+		}
+		else{
+			res.json({
+				status: 200,
+				user: searchedUser
+			})
+		}
 	}
 	catch(error){
 		console.log(next(error));

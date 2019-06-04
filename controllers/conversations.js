@@ -3,35 +3,12 @@ const router = express.Router();
 const Convo = require('../models/conversation')
 const User = require('../models/user')
 const Message = require('../models/message')
-const LanguageTranslatorV3 = require('ibm-watson/language-translator/v3');
-const languageTranslator = new LanguageTranslatorV3({ version: '2019-06-03' });
-
-// translate route to third party api
-// router.get('/', async (req, res, next) => {
-// 	try{
-// 		const translateParams = {
-//   		text: 'hi, how are you?',
-//   		model_id: 'en-pt',
-// 		};
-// 		const translationResult = await languageTranslator.translate(translateParams);
-// 		res.status(200).json({
-// 			status: 200,
-// 			text: translationResult.translations
-// 		})
-// 	}
-// 	catch(error){
-// 		res.status(400).json({
-//       		status: 400,
-//       		error: next(error)
-//     	})
-// 	}		
-// })
 
 // show conversation
 router.get('/convo/:id', async (req, res, next) => {
 	try{
 		const foundConversation = await Convo.findById(req.params.id)
-		.populate('messages')
+		.populate('messages').populate('users')
 		res.json({
 			status: 200,
 			convo: foundConversation
@@ -49,12 +26,20 @@ router.get('/convo/:id', async (req, res, next) => {
 // list of logged in users conversations
 router.get('/current', async (req, res, next) => {
 	try{
-		const foundUser = await User.findById(req.session.userId)
-		.populate('conversations')
-		res.json({
-			status: 200,
-			convos: foundUser.conversations
-		})
+		if(req.session.userId == undefined){
+			res.json({
+				status: 401,
+				message: 'you must be logged in'
+			})
+		}
+		else{
+			const foundUser = await User.findById(req.session.userId)
+			.populate('conversations')
+			res.json({
+				status: 200,
+				convos: foundUser.conversations
+			})
+		}
 	}
 	catch(error){
 		console.log(next(error));
@@ -102,13 +87,11 @@ router.post('/:user', async (req, res, next) => {
 		const loggedUser = await User.findById(req.session.userId)
 		const foundUser = await User.findOne({'username': req.params.user})
 		// write an if statement to check if users already have a chat
-		console.log(loggedUser);
-		console.log(foundUser);
+		// console.log(loggedUser);
+		// console.log(foundUser);
 		const createdConvo = await Convo.create(req.body)
-		console.log(createdConvo);
-		createdConvo.users.push(foundUser)
-		createdConvo.save()
-		createdConvo.users.push(loggedUser)
+		// console.log(createdConvo);
+		createdConvo.users.push(foundUser, loggedUser)
 		createdConvo.save()
 		foundUser.conversations.push(createdConvo)
 		foundUser.save()

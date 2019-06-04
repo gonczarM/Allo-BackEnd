@@ -12,14 +12,14 @@ const messageSchema = new mongoose.Schema({
 		type: Date,
 		default: Date.now
 	},
-	conversation: {
+	conversation: [{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Conversation'
-	},
-	user: {
+	}],
+	user: [{
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
-	}
+	}]
 })
 
 const Message = mongoose.model('Message', messageSchema);
