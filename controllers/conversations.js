@@ -31,6 +31,7 @@ const languageTranslator = new LanguageTranslatorV3({ version: '2019-06-03' });
 router.get('/convo/:id', async (req, res, next) => {
 	try{
 		const foundConversation = await Convo.findById(req.params.id)
+		.populate('messages')
 		res.json({
 			status: 200,
 			convo: foundConversation
@@ -105,14 +106,14 @@ router.post('/:user', async (req, res, next) => {
 		console.log(foundUser);
 		const createdConvo = await Convo.create(req.body)
 		console.log(createdConvo);
-		foundUser.conversations.push(createdConvo)
-		foundUser.save()
-		loggedUser.conversations.push(createdConvo)
-		loggedUser.save()
 		createdConvo.users.push(foundUser)
 		createdConvo.save()
 		createdConvo.users.push(loggedUser)
 		createdConvo.save()
+		foundUser.conversations.push(createdConvo)
+		foundUser.save()
+		loggedUser.conversations.push(createdConvo)
+		loggedUser.save()
 		res.json({
 			status: 200,
 			convo: createdConvo
