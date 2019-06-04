@@ -33,7 +33,11 @@ username, password, language, received_lang, sent_lang, location, about, first_n
 
 ##Conversation:
 
-updated, messages(text, status)
+updated, users(ref), messages(ref)
+
+##Message:
+
+text, status, created, conversation(ref), user(ref)
 
 
 #Third party API
