@@ -6,37 +6,33 @@ const Message = require('../models/message')
 const LanguageTranslatorV3 = require('ibm-watson/language-translator/v3');
 const languageTranslator = new LanguageTranslatorV3({ version: '2019-06-03' });
 
-// translate route to third party api
-// router.get('/', async (req, res, next) => {
-// 	try{
-// 		const translateParams = {
-//   		text: 'hi, how are you?',
-//   		model_id: 'en-pt',
-// 		};
-// 		const translationResult = await languageTranslator.translate(translateParams);
-// 		res.status(200).json({
-// 			status: 200,
-// 			text: translationResult.translations
-// 		})
-// 	}
-// 	catch(error){
-// 		res.status(400).json({
-//       		status: 400,
-//       		error: next(error)
-//     	})
-// 	}		
-// })
-
+// create a message
 router.post('/:convo', async (req, res, next) => {
 	try{
 		const foundConvo = await Convo.findById(req.params.convo)
-		const foundUser = await User.findById(req.session.userId)
-		const createdMessage = await Message.create(req.body)
+		const loggedUser = await User.findById(req.session.userId)
+		const foundUsers = await User.find({'conversations': req.params.convo})
+		let foundUser;
+		for(let i = 0; i < foundUsers.length; i++){
+			if(foundUsers[i]._id.toString() === req.session.userId){
+				foundUsers.splice([i], 1)
+				foundUser = foundUsers
+			}
+		}
+		const translateParams = {
+  		text: req.body.text,
+  		model_id: `${loggedUser.language}-${foundUser[0].language}`
+		};
+		const translationResult = await languageTranslator.translate(translateParams);
+		messageDbEntry = {}
+		messageDbEntry.text = req.body.text
+		messageDbEntry.translatedText = translationResult.translations[0].translation
+		const createdMessage = await Message.create(messageDbEntry)
 		foundConvo.messages.push(createdMessage)
 		foundConvo.save()
 		createdMessage.conversation.push(foundConvo)
 		createdMessage.save()
-		createdMessage.user.push(foundUser)
+		createdMessage.user.push(foundUser[0])
 		createdMessage.save()
 		res.json({
 			status: 200,
@@ -52,6 +48,7 @@ router.post('/:convo', async (req, res, next) => {
 	}		
 })
 
+// delete a message
 router.delete('/message/:id', async (req, res, next) => {
 	try{
 		const deletedMessage = await Message.findByIdAndDelete(req.params.id)

@@ -4,6 +4,7 @@ const User = require('./user');
 
 const messageSchema = new mongoose.Schema({
 	text: String,
+	translatedText: String,
 	status: {
 		type: Boolean,
 		default: false
