@@ -150,7 +150,7 @@ router.post('/login', async (req, res, next) => {
 				req.session.userId = foundUser._id
 				res.json({
 					status: 200,
-					sassion: req.session,
+					session: req.session,
 					user: foundUser
 				})
 			}

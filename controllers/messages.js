@@ -9,35 +9,42 @@ const languageTranslator = new LanguageTranslatorV3({ version: '2019-06-03' });
 // create a message
 router.post('/:convo', async (req, res, next) => {
 	try{
-		const foundConvo = await Convo.findById(req.params.convo)
-		const loggedUser = await User.findById(req.session.userId)
-		const foundUsers = await User.find({'conversations': req.params.convo})
-		let foundUser;
-		for(let i = 0; i < foundUsers.length; i++){
-			if(foundUsers[i]._id.toString() === req.session.userId){
-				foundUsers.splice([i], 1)
-				foundUser = foundUsers
-			}
+		if(req.session.userId == undefined){
+			res.json({
+				status: 401,
+				message: 'you must be logged in'
+			})
 		}
-		const translateParams = {
-  		text: req.body.text,
-  		model_id: `${loggedUser.language}-${foundUser[0].language}`
-		};
-		const translationResult = await languageTranslator.translate(translateParams);
-		messageDbEntry = {}
-		messageDbEntry.text = req.body.text
-		messageDbEntry.translatedText = translationResult.translations[0].translation
-		const createdMessage = await Message.create(messageDbEntry)
-		foundConvo.messages.push(createdMessage)
-		foundConvo.save()
-		createdMessage.conversation.push(foundConvo)
-		createdMessage.save()
-		createdMessage.user.push(foundUser[0])
-		createdMessage.save()
-		res.json({
-			status: 200,
-			message: createdMessage
-		})
+		else{
+			const foundConvo = await Convo.findById(req.params.convo)
+			const loggedUser = await User.findById(req.session.userId)
+			const foundUsers = await User.find({'conversations': req.params.convo})
+			let foundUser;
+			for(let i = 0; i < foundUsers.length; i++){
+				if(foundUsers[i]._id.toString() === req.session.userId){
+					foundUsers.splice([i], 1)
+					foundUser = foundUsers
+				}
+			}
+			const translateParams = {
+	  		text: req.body.text,
+	  		model_id: `${loggedUser.language}-${foundUser[0].language}`
+			};
+			const translationResult = await languageTranslator.translate(translateParams);
+			messageDbEntry = {}
+			messageDbEntry.text = req.body.text
+			messageDbEntry.translatedText = translationResult.translations[0].translation
+			const createdMessage = await Message.create(messageDbEntry)
+			foundConvo.messages.push(createdMessage)
+			foundConvo.save()
+			createdMessage.conversation.push(foundConvo)
+			createdMessage.user.push(loggedUser)
+			createdMessage.save()
+			res.json({
+				status: 200,
+				message: createdMessage
+			})
+		}
 	}
 	catch(error){
 		console.log(next(error));

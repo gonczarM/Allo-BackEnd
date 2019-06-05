@@ -59,7 +59,7 @@ router.get('/search/:username', async (req, res, next) => {
 		loop1:
 		for(let i = 0; i < foundUser.conversations.length; i++){
 			for(let j = 0; j < loggedUser.conversations.length; j++){
-				if(JSON.stringify(foundUser.conversations[i]) === JSON.stringify(loggedUser.conversations[j])){
+				if(foundUser.conversations[i].toString() === loggedUser.conversations[j].toString()){
 					foundConversation = foundUser.conversations[i].toString()
 					break loop1;
 				}
@@ -111,6 +111,7 @@ router.post('/:user', async (req, res, next) => {
 	}		
 })
 
+// deleting a conversation
 router.delete('/convo/:id', async (req, res, next) => {
 	try{
 		const deletedConvo = await Convo.findByIdAndDelete(req.params.id)

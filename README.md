@@ -21,7 +21,7 @@ DELETE (/convo/:id) -- delete a conversation<br/>
 
 ##Message:
 
-POST (/:convo) -- create a message in a conversation<br/>
+POST (/:convo) -- create a message in a conversation with translated message<br/>
 DELETE (/message/:id) -- delete a message<br/>
 
 
