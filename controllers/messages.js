@@ -4,7 +4,11 @@ const Convo = require('../models/conversation')
 const User = require('../models/user')
 const Message = require('../models/message')
 const LanguageTranslatorV3 = require('ibm-watson/language-translator/v3');
-const languageTranslator = new LanguageTranslatorV3({ version: '2019-06-03' });
+const languageTranslator = new LanguageTranslatorV3({
+	url: process.env.LANGUAGE_TRANSLATOR_URL,
+  version: '2019-06-03',
+  iam_apikey: process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY 
+});
 
 // create a message
 router.post('/:convo', async (req, res, next) => {
