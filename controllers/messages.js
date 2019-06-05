@@ -6,7 +6,7 @@ const Message = require('../models/message')
 const LanguageTranslatorV3 = require('ibm-watson/language-translator/v3');
 const languageTranslator = new LanguageTranslatorV3({
 	url: process.env.LANGUAGE_TRANSLATOR_URL,
-  version: '2019-06-03',
+  version: '2019-06-05',
   iam_apikey: process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY 
 });
 
