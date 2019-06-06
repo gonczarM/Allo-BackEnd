@@ -35,12 +35,13 @@ io.on('connection', (socket) => {
 	console.log('user conncected');
 
 	socket.on("messages", (message) => {
-		console.log('message reiceved');
+		console.log('messages reiceved from client');
 		io.sockets.emit('messages', message)
+		console.log('messages sent to clients');
 	})
 
 	socket.on('disconnect', () => {
-		console.log('a user logged off');
+		console.log('user disconnected');
 	})
 })
 

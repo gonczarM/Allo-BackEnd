@@ -93,10 +93,10 @@ router.post('/:user', async (req, res, next) => {
 		// console.log(createdConvo);
 		createdConvo.users.push(foundUser, loggedUser)
 		createdConvo.save()
-		foundUser.conversations.push(createdConvo)
-		foundUser.save()
 		loggedUser.conversations.push(createdConvo)
 		loggedUser.save()
+		foundUser.conversations.push(createdConvo)
+		foundUser.save()
 		res.json({
 			status: 200,
 			convo: createdConvo
