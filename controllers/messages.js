@@ -5,9 +5,9 @@ const User = require('../models/user')
 const Message = require('../models/message')
 const LanguageTranslatorV3 = require('ibm-watson/language-translator/v3');
 const languageTranslator = new LanguageTranslatorV3({
-	url: process.env.LANGUAGE_TRANSLATOR_URL,
   version: '2019-06-05',
-  iam_apikey: process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY 
+  iam_apikey: process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY,
+	url: process.env.LANGUAGE_TRANSLATOR_URL,
 });
 
 // create a message
@@ -30,6 +30,9 @@ router.post('/:convo', async (req, res, next) => {
 					foundUser = foundUsers
 				}
 			}
+			console.log(loggedUser.language);
+			console.log(foundUser[0].language)
+
 			const translateParams = {
 	  		text: req.body.text,
 	  		model_id: `${loggedUser.language}-${foundUser[0].language}`
@@ -40,10 +43,10 @@ router.post('/:convo', async (req, res, next) => {
 			messageDbEntry.translatedText = translationResult.translations[0].translation
 			const createdMessage = await Message.create(messageDbEntry)
 			foundConvo.messages.push(createdMessage)
-			foundConvo.save()
+		  await foundConvo.save()
 			createdMessage.conversation.push(foundConvo)
 			createdMessage.user.push(loggedUser)
-			createdMessage.save()
+			await createdMessage.save()
 			res.json({
 				status: 200,
 				message: createdMessage

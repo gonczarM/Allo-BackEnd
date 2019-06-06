@@ -31,14 +31,15 @@ app.use('/convos', conversationsController);
 const messagesController = require('./controllers/messages');
 app.use('/messages', messagesController);
 
-io.on('connection', (client) => {
+io.on('connection', (socket) => {
 	console.log('user conncected');
 
-	client.on('chat message', (msg) => {
-		console.log('message: ' + msg);
+	socket.on("messages", (message) => {
+		console.log('message reiceved');
+		io.sockets.emit('messages', message)
 	})
 
-	client.on('disconnect', () => {
+	socket.on('disconnect', () => {
 		console.log('a user logged off');
 	})
 })
@@ -46,3 +47,5 @@ io.on('connection', (client) => {
 http.listen(PORT, () => {
 	console.log('listening on port:', PORT);
 });
+
+module.exports = app

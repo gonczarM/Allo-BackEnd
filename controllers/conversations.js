@@ -15,7 +15,7 @@ router.get('/convo/:id', async (req, res, next) => {
 		})
 	}
 	catch(error){
-		console.log(next(error));
+		console.log(error);
 		res.json({
 			status: 400,
 			error: error
