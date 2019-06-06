@@ -23,18 +23,16 @@ router.post('/:convo', async (req, res, next) => {
 			const foundConvo = await Convo.findById(req.params.convo)
 			const loggedUser = await User.findById(req.session.userId)
 			const foundUsers = await User.find({'conversations': req.params.convo})
-			const foundUser = foundUsers[1];
-			// for(let i = 0; i < foundUsers.length; i++){
-			// 	if(foundUsers[i]._id.toString() === req.session.userId){
-			// 		foundUsers.splice([i], 1)
-			// 		foundUser = foundUsers
-			// 	}
-			// }
-			console.log(loggedUser.language);
-			console.log(foundUser.language)
+			let foundUser;
+			for(let i = 0; i < foundUsers.length; i++){
+				if(foundUsers[i]._id.toString() === req.session.userId){
+					foundUsers.splice([i], 1)
+					foundUser = foundUsers
+				}
+			}
 			const translateParams = {
 	  		text: req.body.text,
-	  		model_id: `${loggedUser.language}-${foundUser.language}`
+	  		model_id: `${loggedUser.language}-${foundUser[0].language}`
 			};
 			const translationResult = await languageTranslator.translate(translateParams);
 			messageDbEntry = {}
@@ -46,9 +44,6 @@ router.post('/:convo', async (req, res, next) => {
 			createdMessage.conversation.push(foundConvo)
 			createdMessage.user.push(loggedUser)
 			await createdMessage.save()
-
-
-
 			res.json({
 				status: 200,
 				message: createdMessage

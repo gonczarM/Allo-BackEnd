@@ -34,7 +34,10 @@ router.get('/current', async (req, res, next) => {
 		}
 		else{
 			const foundUser = await User.findById(req.session.userId)
-			.populate('conversations')
+			.populate({
+				path: 'conversations',
+				populate: {path: 'users'}
+			})
 			res.json({
 				status: 200,
 				convos: foundUser.conversations
