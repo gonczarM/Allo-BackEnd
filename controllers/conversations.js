@@ -8,7 +8,10 @@ const Message = require('../models/message')
 router.get('/convo/:id', async (req, res, next) => {
 	try{
 		const foundConversation = await Convo.findById(req.params.id)
-		.populate('messages').populate('users')
+		.populate({
+			path: 'messages',
+			populate: {path: 'user'}
+		})
 		res.json({
 			status: 200,
 			convo: foundConversation

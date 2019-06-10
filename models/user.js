@@ -17,9 +17,6 @@ const userSchema = new mongoose.Schema({
 		default: true
 	},
 	location: String,
-	about: String,
-	first_name: String,
-	last_name: String,
 	active: {
 		type: Boolean,
 		default: false

@@ -30,24 +30,40 @@ router.post('/:convo', async (req, res, next) => {
 					foundUser = foundUsers
 				}
 			}
-			const translateParams = {
-	  		text: req.body.text,
-	  		model_id: `${loggedUser.language}-${foundUser[0].language}`
-			};
-			const translationResult = await languageTranslator.translate(translateParams);
-			messageDbEntry = {}
-			messageDbEntry.text = req.body.text
-			messageDbEntry.translatedText = translationResult.translations[0].translation
-			const createdMessage = await Message.create(messageDbEntry)
-			foundConvo.messages.push(createdMessage)
-		  await foundConvo.save()
-			createdMessage.conversation.push(foundConvo)
-			createdMessage.user.push(loggedUser)
-			await createdMessage.save()
-			res.json({
-				status: 200,
-				message: createdMessage
-			})
+			console.log(foundUser[0].language);
+			console.log(loggedUser.language);
+			if(foundUser[0].language == loggedUser.language){
+				const createdMessage = await Message.create(req.body)
+				foundConvo.messages.push(createdMessage)
+			  await foundConvo.save()
+				createdMessage.conversation.push(foundConvo)
+				createdMessage.user.push(loggedUser)
+				await createdMessage.save()
+				res.json({
+					status: 200,
+					message: createdMessage
+				})
+			}
+			else{
+				const translateParams = {
+		  		text: req.body.text,
+		  		model_id: `${loggedUser.language}-${foundUser[0].language}`
+				};
+				const translationResult = await languageTranslator.translate(translateParams);
+				messageDbEntry = {}
+				messageDbEntry.text = req.body.text
+				messageDbEntry.translatedText = translationResult.translations[0].translation
+				const createdMessage = await Message.create(messageDbEntry)
+				foundConvo.messages.push(createdMessage)
+			  await foundConvo.save()
+				createdMessage.conversation.push(foundConvo)
+				createdMessage.user.push(loggedUser)
+				await createdMessage.save()
+				res.json({
+					status: 200,
+					message: createdMessage
+				})
+			}
 		}
 	}
 	catch(error){
