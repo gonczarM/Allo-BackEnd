@@ -2,27 +2,33 @@
 
 ##User:
 
-GET (/user/:id) -- users info<br/>
-GET (/current) -- logged in users info<br/>
-GET(/search/:username) -- search through users to chat with<br/>
-PUT (/current) -- update users info or users settings<br/>
-POST (/register) -- creates user, starts session<br/>
-POST (/login) -- logs in user, starts sesssion<br/>
-POST (/logout) -- logs user out, kills session<br/>
-DELETE (/current) -- delete specific user and associated convos<br/>
+| Method | Path | Action|
+|--------|------|-------|
+| GET | /user/:id | users info |
+| GET | /current | logged in users info |
+| GET | /search/:username | search through users to chat with |
+| PUT | /current | update users info or users settings |
+| POST | /register | creates user, starts session |
+| POST | /login | logs in user, starts sesssion |
+| POST | /logout | logs user out, kills session |
+| DELETE | /current | delete specific user and associated convos |
 
 ##Conversation:
 
-GET (/convo/:id) -- show conversation<br/>
-GET (/) -- list of users conversations<br/>
-GET(/search/:username) -- search for a conversation by username<br/>
-POST (/:user) -- start a conversation<br/>
-DELETE (/convo/:id) -- delete a conversation<br/>
+| Method | Path | Action|
+|--------|------|-------|
+| GET | /convo/:id | show conversation |
+| GET | /current | list of users conversations |
+| GET | /search/:username | search for a conversation by username |
+| POST | /:user | start a conversation |
+| DELETE | /convo/:id | delete a conversation |
 
 ##Message:
 
-POST (/:convo) -- create a message in a conversation with translated message<br/>
-DELETE (/message/:id) -- delete a message<br/>
+| Method | Path | Action|
+|--------|------|-------|
+| POST | /:convo | create a message in a conversation with translated message |
+| DELETE | /message/:id | delete a message |
 
 
 #Models
