@@ -1,6 +1,37 @@
-#Routes
+# Allo API
 
-##User:
+This API can create users that can connect to other users with a conversation. Each user chooses an availble language and then can recieve all messages from conversations in their chosen language.
+
+## Getting Started
+
+This is a pretty straight forward and simple installation. This back end app uses node.js and npm so those are the only prerequisites.
+
+### Installing
+
+After forking the api just run npm install to download all the dependencies
+
+### Dependencies 
+
+This app uses 
+
+```
+bcryptjs
+body-parser
+cors
+dotenv
+express
+express-session
+ibm-watson
+method-override
+mongoose
+socket.io
+ ```
+
+## Routes
+
+These are all the endpoints that you can access for this API
+
+### User:
 
 | Method | Path | Action|
 |--------|------|-------|
@@ -13,7 +44,7 @@
 | POST | /logout | logs user out, kills session |
 | DELETE | /current | delete specific user and associated convos |
 
-##Conversation:
+### Conversation:
 
 | Method | Path | Action|
 |--------|------|-------|
@@ -23,7 +54,7 @@
 | POST | /:user | start a conversation |
 | DELETE | /convo/:id | delete a conversation |
 
-##Message:
+### Message:
 
 | Method | Path | Action|
 |--------|------|-------|
@@ -31,22 +62,40 @@
 | DELETE | /message/:id | delete a message |
 
 
-#Models
+## Models
 
-##User:
+### User:
 
-username, password, language, received_lang, sent_lang, location, about, first_name, last_name, active, conversations
+```
+username, 
+password, 
+language, 
+location, 
+active, 
+conversations(ref)
+```
 
-##Conversation:
+### Conversation:
 
-updated, users(ref), messages(ref)
+```
+updated, 
+users(ref), 
+messages(ref)
+```
 
-##Message:
+### Message:
 
-text, status, created, conversation(ref), user(ref)
+```
+text, 
+translatedText, 
+status, 
+created, 
+conversation(ref), 
+user(ref)
+```
 
 
-#Third party API
+## Third party API
 
-##IBM Watson LT:
+### IBM Watson LT:
 https://www.ibm.com/watson/services/language-translator/?lnk=hm
