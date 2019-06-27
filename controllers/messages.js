@@ -24,14 +24,14 @@ router.post('/:convo', async (req, res, next) => {
 			const loggedUser = await User.findById(req.session.userId)
 			const foundUsers = await User.find({'conversations': req.params.convo})
 			let foundUser;
+// this loop finds the user thats part of the conversation that is not the logged in user
 			for(let i = 0; i < foundUsers.length; i++){
 				if(foundUsers[i]._id.toString() === req.session.userId){
 					foundUsers.splice([i], 1)
 					foundUser = foundUsers
 				}
 			}
-			console.log(foundUser[0].language);
-			console.log(loggedUser.language);
+// this stops the translating if the users use the same language
 			if(foundUser[0].language == loggedUser.language){
 				const createdMessage = await Message.create(req.body)
 				foundConvo.messages.push(createdMessage)
@@ -55,7 +55,7 @@ router.post('/:convo', async (req, res, next) => {
 				messageDbEntry.translatedText = translationResult.translations[0].translation
 				const createdMessage = await Message.create(messageDbEntry)
 				foundConvo.messages.push(createdMessage)
-			  await foundConvo.save()
+			  	await foundConvo.save()
 				createdMessage.conversation.push(foundConvo)
 				createdMessage.user.push(loggedUser)
 				await createdMessage.save()

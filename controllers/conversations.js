@@ -61,6 +61,7 @@ router.get('/search/:username', async (req, res, next) => {
 	try{
 		const foundUser = await User.findOne({'username': req.params.username})
 		const loggedUser = await User.findById(req.session.userId)
+// this nested loop compares conversations that the two users have, finding the conversation they share 
 		let foundConversation;
 		loop1:
 		for(let i = 0; i < foundUser.conversations.length; i++){
@@ -93,10 +94,7 @@ router.post('/:user', async (req, res, next) => {
 		const loggedUser = await User.findById(req.session.userId)
 		const foundUser = await User.findOne({'username': req.params.user})
 		// write an if statement to check if users already have a chat
-		// console.log(loggedUser);
-		// console.log(foundUser);
 		const createdConvo = await Convo.create(req.body)
-		// console.log(createdConvo);
 		createdConvo.users.push(foundUser, loggedUser)
 		createdConvo.save()
 		loggedUser.conversations.push(createdConvo)
