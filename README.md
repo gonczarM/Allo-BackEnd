@@ -1,46 +1,101 @@
-#Routes
+# Allo API
 
-##User:
+This API can create users that can connect to other users with a conversation. Each user chooses an availble language and then can recieve all messages from conversations in their chosen language.
 
-GET (/user/:id) -- users info<br/>
-GET (/current) -- logged in users info<br/>
-GET(/search/:username) -- search through users to chat with<br/>
-PUT (/current) -- update users info or users settings<br/>
-POST (/register) -- creates user, starts session<br/>
-POST (/login) -- logs in user, starts sesssion<br/>
-POST (/logout) -- logs user out, kills session<br/>
-DELETE (/current) -- delete specific user and associated convos<br/>
+## Getting Started
 
-##Conversation:
+This is a pretty straight forward and simple installation. This back end app uses node.js and npm so those are the only prerequisites.
 
-GET (/convo/:id) -- show conversation<br/>
-GET (/) -- list of users conversations<br/>
-GET(/search/:username) -- search for a conversation by username<br/>
-POST (/:user) -- start a conversation<br/>
-DELETE (/convo/:id) -- delete a conversation<br/>
+### Installing
 
-##Message:
+After forking the api just run npm install to download all the dependencies
 
-POST (/:convo) -- create a message in a conversation with translated message<br/>
-DELETE (/message/:id) -- delete a message<br/>
+### Dependencies 
+
+This app uses 
+
+```
+bcryptjs
+body-parser
+cors
+dotenv
+express
+express-session
+ibm-watson
+method-override
+mongoose
+socket.io
+ ```
+
+## Routes
+
+These are all the endpoints that you can access for this API
+
+### User:
+
+| Method | Path | Action|
+|--------|------|-------|
+| GET | /user/:id | users info |
+| GET | /current | logged in users info |
+| GET | /search/:username | search through users to chat with |
+| PUT | /current | update users info or users settings |
+| POST | /register | creates user, starts session |
+| POST | /login | logs in user, starts sesssion |
+| POST | /logout | logs user out, kills session |
+| DELETE | /current | delete specific user and associated convos |
+
+### Conversation:
+
+| Method | Path | Action|
+|--------|------|-------|
+| GET | /convo/:id | show conversation |
+| GET | /current | list of users conversations |
+| GET | /search/:username | search for a conversation by username |
+| POST | /:user | start a conversation |
+| DELETE | /convo/:id | delete a conversation |
+
+### Message:
+
+| Method | Path | Action|
+|--------|------|-------|
+| POST | /:convo | create a message in a conversation with translated message |
+| DELETE | /message/:id | delete a message |
 
 
-#Models
+## Models
 
-##User:
+### User:
 
-username, password, language, received_lang, sent_lang, location, about, first_name, last_name, active, conversations
+```
+username, 
+password, 
+language, 
+location, 
+active, 
+conversations(ref)
+```
 
-##Conversation:
+### Conversation:
 
-updated, users(ref), messages(ref)
+```
+updated, 
+users(ref), 
+messages(ref)
+```
 
-##Message:
+### Message:
 
-text, status, created, conversation(ref), user(ref)
+```
+text, 
+translatedText, 
+status, 
+created, 
+conversation(ref), 
+user(ref)
+```
 
 
-#Third party API
+## Third party API
 
-##IBM Watson LT:
+### IBM Watson LT:
 https://www.ibm.com/watson/services/language-translator/?lnk=hm
