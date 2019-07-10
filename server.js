@@ -44,6 +44,10 @@ io.on('connection', (socket) => {
 		console.log('messages sent to clients');
 	})
 
+	socket.on('conversations', (conversation) => {
+		io.sockets.emit('conversations', conversation)
+	})
+
 	socket.on('disconnect', () => {
 		console.log('user disconnected');
 	})
