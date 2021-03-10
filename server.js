@@ -4,7 +4,7 @@ const app = express();
 const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const session = require('express-session');
-const cors = require('cors');
+// const cors = require('cors');
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 
@@ -20,11 +20,11 @@ app.use(session({
 	resave: false,
 	saveUninitialized: false
 }));
-app.use(cors({
+// app.use(cors({
 	// origin: process.env.REACT_CLIENT_URL,
 	// credentials: true,
 	// optionsSuccessStatus: 200
-}));
+// }));
 
 //controllers
 const usersController = require('./controllers/users');
