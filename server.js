@@ -6,7 +6,9 @@ const methodOverride = require('method-override');
 const session = require('express-session');
 const cors = require('cors');
 const http = require('http').Server(app)
-const io = require('socket.io')(http)
+const io = require('socket.io')(http, {
+	origins: [process.env.REACT_CLIENT_URL]
+});
 
 require('dotenv').config();
 require('./db/db');
