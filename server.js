@@ -6,9 +6,7 @@ const methodOverride = require('method-override');
 const session = require('express-session');
 const cors = require('cors');
 const http = require('http').Server(app)
-const io = require('socket.io')(http, {
-	origins: [process.env.REACT_CLIENT_URL]
-});
+const io = require('socket.io')(http)
 
 require('dotenv').config();
 require('./db/db');
@@ -23,9 +21,9 @@ app.use(session({
 	saveUninitialized: false
 }));
 app.use(cors({
-	origin: process.env.REACT_CLIENT_URL,
-	credentials: true,
-	optionsSuccessStatus: 200
+	// origin: process.env.REACT_CLIENT_URL,
+	// credentials: true,
+	// optionsSuccessStatus: 200
 }));
 
 //controllers
