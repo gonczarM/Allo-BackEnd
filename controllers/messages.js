@@ -4,10 +4,13 @@ const Convo = require('../models/conversation')
 const User = require('../models/user')
 const Message = require('../models/message')
 const LanguageTranslatorV3 = require('ibm-watson/language-translator/v3');
+const {IamAuthenticator} = require('ibm-watson/auth');
 const languageTranslator = new LanguageTranslatorV3({
-  version: '2019-06-05',
-  iam_apikey: process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY,
-	url: process.env.LANGUAGE_TRANSLATOR_URL,
+  	version: '2021-03-27',
+  	authenticator: new IamAuthenticator({
+  		apikey: process.env.LANGUAGE_TRANSLATOR_IAM_APIKEY,
+  	}),
+	serviceUrl: process.env.LANGUAGE_TRANSLATOR_URL,
 });
 
 // create a message
