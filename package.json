@@ -2,6 +2,9 @@
   "name": "06-02-capstone",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": "15.12.0"
+  },
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -21,7 +21,7 @@ app.use(session({
 	saveUninitialized: false
 }));
 app.use(cors({
-	origin: process.env.REACT_CLIENT_URL1,
+	origin: process.env.REACT_CLIENT_URL,
 	credentials: true,
 	optionsSuccessStatus: 200
 }));
