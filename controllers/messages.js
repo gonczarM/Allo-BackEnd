@@ -50,12 +50,12 @@ router.post('/:convo', async (req, res, next) => {
 			else{
 				const translateParams = {
 		  		text: req.body.text,
-		  		model_id: `${loggedUser.language}-${foundUser[0].language}`
+		  		modelId: `${loggedUser.language}-${foundUser[0].language}`
 				};
 				const translationResult = await languageTranslator.translate(translateParams);
 				messageDbEntry = {}
 				messageDbEntry.text = req.body.text
-				messageDbEntry.translatedText = translationResult.translations[0].translation
+				messageDbEntry.translatedText = translationResult.result.translations[0].translation
 				const createdMessage = await Message.create(messageDbEntry)
 				foundConvo.messages.push(createdMessage)
 			  	await foundConvo.save()
