@@ -33,6 +33,7 @@ router.get('/current', async (req, res, next) => {
 		}
 		else{
 			const currentUser = await User.findById(req.session.userId)
+			console.log(currentUser);
 			res.json({
 				status: 200,
 				user: currentUser
@@ -144,6 +145,10 @@ router.post('/register', async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
 	try{
 		const foundUser = await User.findOne({'username': req.body.username})
+		// .populate('conversations')
+		// const foundConvo = await Conversation.findById(foundUser.conversations[0]._id)
+		// .populate('messages')
+		// console.log(foundConvo);
 		if(foundUser){
 			if(bcrypt.compareSync(req.body.password, foundUser.password) === true){
 				req.session.loggedIn = true
