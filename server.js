@@ -5,17 +5,18 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const session = require('express-session');
 const cors = require('cors');
-const http = require('http').Server(app)
-const io = require('socket.io')(http)
+// const http = require('http').Server(app)
+// const io = require('socket.io')(http)
 
-// require("greenlock-express")
-// 	.init({
-// 		packageRoot: __dirname,
-// 		configDir: "./greenlock.d",
-// 		maintainerEmail: "mattisagumball@gmail.com",
-// 		cluster: false
-// 	})
-// 	.serve(app)
+require("greenlock-express")
+	.init({
+		packageRoot: __dirname,
+		configDir: "./greenlock.d",
+		maintainerEmail: "mattisagumball@gmail.com",
+		cluster: false
+	})
+	// .serve(app)
+	.ready(httpsWorker)
 require('dotenv').config();
 require('./db/db');
 const PORT = process.env.PORT;
@@ -43,13 +44,13 @@ app.use('/convos', conversationsController);
 const messagesController = require('./controllers/messages');
 app.use('/messages', messagesController);
 
-//socket.io
-// function httpsWorker(glx){
-// 	const socketio =  require("socket.io");
-// 	let io;
-// 	const server = glx.httpsServer();
+// socket.io
+function httpsWorker(glx){
+	const socketio =  require("socket.io");
+	let io;
+	const server = glx.httpsServer();
 
-// 	io =socketio(server);
+	io =socketio(server);
 
 	io.on('connection', (socket) => {
 		console.log('user conncected');
@@ -69,13 +70,13 @@ app.use('/messages', messagesController);
 			console.log('user disconnected');
 		})
 	})
-// 	glx.serveApp(function(rq, res){
-// 		res.setHeader("Content-Type", "text/html; charset=utf-8");
-// 		res.end("Hello, World!\n\n:green_heart: :lock:.js")
-// 	})
-// }
-http.listen(PORT, () => {
-	console.log('listening on port:', PORT);
-});
+	glx.serveApp(function(rq, res){
+		res.setHeader("Content-Type", "text/html; charset=utf-8");
+		res.end("Hello, World!\n\n:green_heart: :lock:.js")
+	})
+}
+// http.listen(PORT, () => {
+// 	console.log('listening on port:', PORT);
+// });
 
 module.exports = app
