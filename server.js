@@ -1,40 +1,35 @@
 // module requirments
 const express = require('express');
 const app = express();
-const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const session = require('express-session');
 const cors = require('cors');
-// const http = require('http').Server(app)
-// const io = require('socket.io')(http)
+const http = require('http').Server(app)
+const io = require('socket.io')(http)
 
-require("greenlock-express")
-	.init({
-		packageRoot: __dirname,
-		configDir: "./greenlock.d",
-		maintainerEmail: "mattisagumball@gmail.com",
-		cluster: false
-	})
-	// .serve(app)
-	.ready(httpsWorker)
 require('dotenv').config();
 require('./db/db');
 const PORT = process.env.PORT;
 
 // middleware
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 app.use(session({
 	secret: process.env.SESSION_SECRET,
 	resave: false,
-	saveUninitialized: false,
-	cookie: {httpOnly: false}
+	saveUninitialized: false
 }));
-app.use(cors({
-	origin: process.env.REACT_CLIENT_URL,
-	credentials: true,
-	optionsSuccessStatus: 200
-}));
+const whitelist = [process.env.REACT_CLIENT_URL]
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+  	}
+  },credentials: true
+}
+app.use(cors(corsOptions)) 
 
 //controllers
 const usersController = require('./controllers/users');
@@ -44,39 +39,27 @@ app.use('/convos', conversationsController);
 const messagesController = require('./controllers/messages');
 app.use('/messages', messagesController);
 
-// socket.io
-function httpsWorker(glx){
-	const socketio =  require("socket.io");
-	let io;
-	const server = glx.httpsServer();
+io.on('connection', (socket) => {
+	console.log('user conncected');
 
-	io =socketio(server);
-
-	io.on('connection', (socket) => {
-		console.log('user conncected');
-
-		socket.on("messages", (message) => {
-			console.log('messages reiceved from client');
-			io.sockets.emit('messages', message)
-			console.log('messages sent to clients');
-		})
-
-		socket.on('conversations', (conversation) => {
-			console.log('conversation sent');
-			io.sockets.emit('conversations', conversation)
-		})
-
-		socket.on('disconnect', () => {
-			console.log('user disconnected');
-		})
+	socket.on("messages", (message) => {
+		console.log('messages reiceved from client');
+		io.sockets.emit('messages', message)
+		console.log('messages sent to clients');
 	})
-	glx.serveApp(function(rq, res){
-		res.setHeader("Content-Type", "text/html; charset=utf-8");
-		res.end("Hello, World!\n\n:green_heart: :lock:.js")
+
+	socket.on('conversations', (conversation) => {
+		console.log('conversation sent');
+		io.sockets.emit('conversations', conversation)
 	})
-}
-// http.listen(PORT, () => {
-// 	console.log('listening on port:', PORT);
-// });
+
+	socket.on('disconnect', () => {
+		console.log('user disconnected');
+	})
+})
+
+http.listen(PORT, () => {
+	console.log('listening on port:', PORT);
+});
 
 module.exports = app
